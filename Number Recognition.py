@@ -3,6 +3,7 @@ import scipy.special
 from PIL import Image
 import pygame
 
+# Press Z button to draw a new number
 
 class neuralNetwork:
 
@@ -19,8 +20,6 @@ class neuralNetwork:
 
         self.activation_function = lambda x: scipy.special.expit(x)
 
-        pass
-
 
     def query(self, inputs_list):
 
@@ -33,6 +32,7 @@ class neuralNetwork:
         final_outputs = self.activation_function(final_inputs)
 
         return final_outputs
+
 
 input_nodes = 784
 hidden_nodes = 200
@@ -52,17 +52,21 @@ r = 20
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("12!")
+pygame.display.set_caption("Number Recognition")
 clock = pygame.time.Clock()
 screen.fill(WHITE)
 pygame.display.update()
 
 run = True
+
 while run:
+    
     try:
         pressed = pygame.mouse.get_pressed()
         clock.tick(FPS)
-        for event in pygame.event.get():
+        
+        or event in pygame.event.get():
+            
             if event.type == pygame.QUIT:
                 run = False
 
@@ -70,11 +74,13 @@ while run:
                     pygame.draw.circle(screen, BLACK, (event.pos[0], event.pos[1]), r)
 
             elif event.type == pygame.KEYDOWN:
+                
                 if event.key == pygame.K_z:
                     pygame.image.save(screen, 'number.png')
                     img = Image.open('number.png').transpose(Image.TRANSPOSE)
                     img.thumbnail((28, 28))
                     pixels = img.load()
+                    
                     x = y = 28
                     image = 255 - numpy.array([pixels[i, j][0] for i in range(x) for j in range(y)])
                     inputs = (image / 255.0 * 0.99) + 0.01
@@ -82,10 +88,12 @@ while run:
                     # query the network
                     outputs = n.query(inputs)
                     label = numpy.argmax(outputs)
-                    print("Ответ нейросети:", label)
+                    
+                    print("Answer of a neural network:", label)
                     screen.fill(WHITE)
 
         pygame.display.update()
+    
     except:
         pass
 
